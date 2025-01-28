@@ -1,0 +1,15 @@
+Quote schema:
+T string message type, always “q”
+S string symbol
+ax string ask exchange code
+ap number ask price
+as int ask size
+bx string bid exchange code
+bp number bid price
+bs int bid size
+t string RFC-3339 formatted timestamp with nanosecond precision.
+c array<string> quote condition
+z string tape
+
+source
+https://alpaca.markets/deprecated/docs/api-documentation/api-v2/market-data/alpaca-data-api-v2/real-time/
