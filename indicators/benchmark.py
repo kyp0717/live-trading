@@ -8,13 +8,20 @@ import urllib.parse
 import pandas as pd
 import json
 import pytz
-from typing import List
+from typing import List, TypeAlias
 from collections import deque
-from enum import IntEnum
+from enum import IntEnum, Enum
 import pandas_ta as ta
+from dataclasses import dataclass, field
+from bokeh.plotting import figure, show
+from bokeh.io import output_notebook
+from bokeh.models import ColumnDataSource, DatetimeTickFormatter
+
 
 # Load environment variables from .env file
 load_dotenv()
+output_notebook()
+
 headers = {
     "accept": "application/json",
     "APCA-API-KEY-ID": os.getenv("APCA_API_KEY_ID"),
@@ -32,23 +39,31 @@ logging.basicConfig(
 )
 
 ## Signal to determine market conditoin
-class MarketSignal(IntEnum):
+class Market(IntEnum):
     Stable = 1
     Rally = 2
     Selloff = 3
     Volatile = 4
     Unknown = 5
 
-class MarketStatus():
+class Indicator(Enum):
+    ema5 = 1
+    ema10 = 2
 
+class Direction(Enum):
+    UP = 1
+    DOWN = 2
 
+class TrendType(Enum):
+    PCT_DELTA =1
 
-
-class Indicator():
-    EMA5_PCT = 0.0
-    CLOSE = 0.0
-
-
+@dataclass
+class Trend():
+    trendtype: TrendType = field(default=None)
+    indicator: Indicator = field(default=None)
+    direction: Direction = field(default=None)
+    prices: list[float] = field(default=None)
+    change: float = field(default=None)
 
 class Benchmark:
     # defining var in init allow for custom variable in each instance
@@ -56,13 +71,9 @@ class Benchmark:
     def __init__(self, symbol: str):
         self.symbol=symbol
         self.ready=self.check_time()
-        self.status = {}
-        pct_up=0.0
-        pct_down=0.0
-        pct_change= {}
-        window = deque()
+        # self.ready=True
         stock_lst = self.get_stock_list()
-        signal = MarketStatus.Unknown
+
 
     def check_time(self):
         today = datetime.now(pytz.timezone('US/Eastern')).date()
@@ -75,7 +86,7 @@ class Benchmark:
 
         if now_utc < market_open_utc_datetime:
             return False
-        else: return True 
+        else: return True
 
     def get_stock_list(self):
         pass
@@ -118,28 +129,67 @@ class Benchmark:
             return data['bars'][self.symbol]
             # return data
         
-    def status(self) -> MarketStatus:
+    def trend(self) -> Trend:
         if self.ready==True:
             d = self.get_10bars(feed="iex")
             df = pd.DataFrame(d)
             df['ema5'] = ta.ema(df['c'], length=5)
+            # Extract the time part
+            df["t2"] = pd.to_datetime(df["t"], errors='coerce',utc=True)
+            df['t2_est'] = df['t2'].dt.tz_convert('US/Eastern')
+            df['time'] = df['t2_est'].dt.time
+            print(df)
+            self.plot(df)
             row = df.tail(1).to_dict(orient='records')[0]
  
             # Calculate the percentage change
             pct = (row['ema5'] - row['c']) / row['c'] 
             print(row)
             print(pct)
-           
-            if (pct >= -0.05 or pct <= 0.05):
-                return MarketStatus.Stable
-            elif pct > 0.05:
-                return MarketStatus.Rally
-            elif pct < -0.05:
-                return MarketStatus.Selloff
+            t = Trend()
+            t.indicator = Indicator.ema5
+            t.trendtype = TrendType.PCT_DELTA
+            t.prices = [row['c']]
+            t.change = pct
+            if  pct <= 0:
+                t.direction = Direction.DOWN
             else:
-                return MarketStatus.Unknown
+                t.direction = Direction.UP
+            return t
         else:
             print("not time yet")
+
+    def plot(self,df: pd.DataFrame):
+        # Create a ColumnDataSource from the DataFrame
+        source = ColumnDataSource(df)
+
+        # Create a figure
+        p = figure(title="Line Chart", x_axis_label="x", y_axis_label="y")
+
+        # Add a line glyph
+        p.line(x="time", y="c", source=source)
+        # Format x-axis labels for EST
+        # p.xaxis.formatter = DatetimeTickFormatter(
+        #                                 #   years="%d/%m/%Y %H:%M:%S",
+        #                                 #   months="%d/%m/%Y %H:%M:%S",
+        #                                 #   days="%d/%m/%Y %H:%M:%S",
+        #                                   hours="%d/%m/%Y %H:%M:%S",
+        #                                 #   hourmin="%d/%m/%Y %H:%M:%S",
+        #                                   minutes="%d/%m/%Y %H:%M:%S",
+        #                                 #   minsec="%d/%m/%Y %H:%M:%S",
+        #                                 #   seconds="%d/%m/%Y %H:%M:%S",
+        #                                 #   milliseconds="%d/%m/%Y %H:%M:%S",
+        #                                 #   microseconds="%d/%m/%Y %H:%M:%S"
+        #                                   )
+
+        p.xaxis.formatter = DatetimeTickFormatter(
+                          hours="%H:%M",
+                          minutes="%H:%M"
+                          )
+
+        # Show the plot
+        show(p)
+
 
     def get_bar(self):
         url = f'https://data.alpaca.markets/v2/stocks/bars/latest?symbols={self.symbol}'

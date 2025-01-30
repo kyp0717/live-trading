@@ -1,0 +1,6 @@
+{
+    "python.analysis.extraPaths": [
+        "/home/kepl/miniconda3/envs/aiagent",
+        "./indicators"
+    ]
+}
