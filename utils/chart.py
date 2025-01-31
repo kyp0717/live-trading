@@ -1,8 +1,12 @@
 from bokeh.plotting import figure, show
 from bokeh.models import ColumnDataSource, DatetimeTickFormatter, Legend, LegendItem, Label
 from lightweight_charts import Chart, JupyterChart
+import pandas as pd
 
-def plot(self,df: pd.DataFrame) -> None:
+
+
+
+def plot(df: pd.DataFrame) -> None:
     # Create a ColumnDataSource from the DataFrame
     source = ColumnDataSource(df)
     # Create a figure
@@ -18,7 +22,7 @@ def plot(self,df: pd.DataFrame) -> None:
     show(p)
 
 
-def tvplot(self,df: pd.DataFrame):
+def tvplot(df: pd.DataFrame):
     # d = df[['c','o','h','l','t','v']]
     df = df.rename(columns={'c': 'close',
                         'o': 'open',

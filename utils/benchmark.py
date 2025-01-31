@@ -16,6 +16,8 @@ from dataclasses import dataclass, field
 from enum import IntEnum
 import paca_bars as bars
 import indicator as ind
+import chart as ct
+
 # Load environment variables from .env file
 load_dotenv()
 output_notebook()
@@ -40,7 +42,7 @@ class Market(IntEnum):
 
 
 
-class Benchmark(ind.Indicator):
+class Benchmark():
     # defining var in init allow for custom variable in each instance
     # when defining var outside of init, the var will be the same in all instance
     def __init__(self, symbol: str):
@@ -49,7 +51,8 @@ class Benchmark(ind.Indicator):
         # self.ready=True
         # stock_lst = self.get_stock_list()
         self.ema_trend = None
-        
+        self.indicator = ind.Indicator(self.symbol)
+        self.chart = ct.Chart(self.symbol, self.indicator.df)
 
 
     def check_time(self):
@@ -67,7 +70,9 @@ class Benchmark(ind.Indicator):
 
     def run(self):
         if self.ready == True:
-            self.ema_trend = super().ema(period=5)
+            self.indicator.ema(period=5)
+            self.chart.plot()
+            # self.indicator.test()
         else:
             print('not 9:40am --- more data is needed')
 

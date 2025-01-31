@@ -20,7 +20,7 @@ class Direction(Enum):
 
 class IndType(Enum):
     EMA = 1
-    DOWN = 2
+    REGRESSION = 2
 
 class TrendType(Enum):
     PCT_CHANGE =1
@@ -31,14 +31,17 @@ class Trend():
     trendtype: TrendType = field(default=None)
     indicator: IndType = field(default=None)
     direction: Direction = field(default=None)
-    prices: list[float] = field(default=None)
+    price: float = field(default=None)
     change: float = field(default=None)
 
     def __repr__(self):
-        return f" --- {self.symbol} Trend  ----  \n" \
-               f"  trend type={self.trendtype.name!r},\n" \
-               f"  indicator={self.indicator.name!r}\n" \
-               f"  ---------------------------------"
+        return f" ----------- {self.symbol} Trend --------  \n" \
+               f"  trend type  = {self.trendtype.name!r}\n" \
+               f"  indicator   = {self.indicator.name!r}\n" \
+               f"  direction   = {self.direction.name!r}\n" \
+               f"  price       = {self.price}\n" \
+               f"  change      = {self.change},\n" \
+               f"  -----------------------------------------"
 
 
 class Trend2(TypedDict):
@@ -46,31 +49,44 @@ class Trend2(TypedDict):
     trendtype: TrendType = field(default=None)
     indicator: IndType = field(default=None)
     direction: Direction = field(default=None)
-    prices: list[float] = field(default=None)
+    price: list[float] = field(default=None)
     change: float = field(default=None)
 
     def __repr__(self):
-        return f" --- {self.symbol} Trend  ----  \n" \
-               f"  trend type={self.trendtype.name!r},\n" \
-               f"  indicator={self.indicator.name!r}\n" \
-               f"  ---------------------------------"
+        return f" ----------- {self.symbol} Trend --------  \n" \
+               f"  trend type  = {self.trendtype.name!r}\n" \
+               f"  indicator   = {self.indicator.name!r}\n" \
+               f"  direction   = {self.direction.name!r}\n" \
+               f"  price       = {self.price.name!r}\n" \
+               f"  chane       = {self.change.name!r}\n" \
+               f"  -------------------------------------"
 
 
-@dataclass
-class Indicator:
-    symbol: str
-    data: pd.DataFrame
+## to avoid multiple copy of the dataframe 
+## use generate multiple indicators using the same dataframe
+## so this indicators class will host many indicators
+class Indicators:
+    def __init__(self, symbol: str):
+        self.symbol=symbol
+        self.df: pd.DataFrame = self.get_data()
+
+    def get_data(self):
+        return pd.DataFrame(bars.get_10bars(self.symbol, feed="iex"))
+    
+
+    def test(self):
+        print(type(self.df))
+        print(self.df)
+
 
     def ema(self, period: int) -> Trend:
-        d = bars.get_10bars(self.symbol, feed="iex")
-        df = pd.DataFrame(d)
-        df['ema5'] = ta.ema(df['c'], period=period)
+        self.df['ema5'] = ta.ema(self.df['c'], period=period)
         # Extract the time part
-        df["t2"] = pd.to_datetime(df["t"], errors='coerce',utc=True)
-        df['t2_est'] = df['t2'].dt.tz_convert('US/Eastern')
-        df['time'] = df['t2_est'].dt.time
+        self.df["t2"] = pd.to_datetime(self.df["t"], errors='coerce',utc=True)
+        self.df['t2_est'] = self.df['t2'].dt.tz_convert('US/Eastern')
+        self.df['time'] = self.df['t2_est'].dt.time
         # print(df)
-        row = df.tail(1).to_dict(orient='records')[0]
+        row = self.df.tail(1).to_dict(orient='records')[0]
 
         # Calculate the percentage change
         pct = (row['ema5'] - row['c']) / row['c'] 
@@ -80,12 +96,13 @@ class Indicator:
         t.symbol =self.symbol
         t.indicator = IndType.EMA
         t.trendtype = TrendType.PCT_CHANGE
-        t.prices = [row['c']]
+        t.price = row['c']
         t.change = pct
-        print(t)
         if  pct <= 0:
             t.direction = Direction.DOWN
         else:
             t.direction = Direction.UP
+        print(t)
+
         
         return t
