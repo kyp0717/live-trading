@@ -10,7 +10,7 @@ OUTPUT_FILE_NAME = 'test_output.html'
 class HtmlGenerator(object):
     def __init__(self, template_name):
         self.template_name = template_name
-        self.env = Environment(loader=FileSystemLoader('templates'))
+        self.env = Environment(loader=FileSystemLoader('live_templates'))
 
     def _build_path(self, suffix):
         # Build the full file path based on our current directory
@@ -27,6 +27,8 @@ class HtmlGenerator(object):
         os.mkdir(public_folder_path)
 
         # Get Jinja template
+        # Print the search path
+        print(f'search: {self.env.loader.searchpath}')
         template = self.env.get_template(self.template_name)
         with open(self._build_path('public/%s' % OUTPUT_FILE_NAME), 'w') as html_file:
             html = template.render(
