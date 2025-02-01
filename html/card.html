@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Cards</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <h2 class="main-heading">
+        How to create a "card" with CSS
+    </h2>
+
+    <!-- Card Container -->
+    <div class="card-container">
+
+        <!-- First Card -->
+        <div class="card">
+            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20230416201559/DevOps-Roadmap.webp"
+                alt="Card image" class="card-img">
+            <div class="card-content">
+                <h2 class="card-title">
+                    DevOps Card
+                </h2>
+                <p class="card-description">
+                    DevOps is a collection of two words,
+                    “Development” and “Operations,”
+                    representing a cultural approach that
+                    emphasizes collaboration between
+                    development and operations teams to
+                    streamline the entire software
+                    delivery lifecycle.
+                </p>
+                <ul class="card-list">
+                    <li>Continuous Integration (CI)</li>
+                    <li>Continuous Deployment (CD)</li>
+                    <li>Infrastructure as Code (IaC)</li>
+                </ul>
+                <button class="card-button" onclick="toggleModal(1)">
+                    Read More...
+                </button>
+            </div>
+        </div>
+
+        <!-- Second Card -->
+        <div class="card">
+            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20231207165628/Full-Stack-Developer-Roadmap.webp"
+                alt="Card image" class="card-img">
+            <div class="card-content">
+                <h2 class="card-title">
+                    Full Stack Developer Roadmap
+                </h2>
+                <p class="card-description">
+                    A comprehensive roadmap for becoming a
+                    full stack developer, covering various
+                    technologies and skills required in
+                    both front-end and back-end development.
+                </p>
+                <ul class="card-list">
+                    <li>HTML/CSS</li>
+                    <li>JavaScript</li>
+                    <li>Node.js</li>
+                </ul>
+                <button class="card-button" onclick="toggleModal(2)">
+                    Read More...
+                </button>
+            </div>
+        </div>
+
+        <!-- Third Card -->
+        <div class="card">
+            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20240308154942/web-(1).jpg" 
+                 alt="Card image"
+                class="card-img">
+            <div class="card-content">
+                <h2 class="card-title">
+                    Web Development Trends
+                </h2>
+                <p class="card-description">
+                    Explore the latest trends in web development,
+                    including advancements in technologies,
+                    frameworks, and best practices shaping
+                    the future of web development.
+                </p>
+                <ul class="card-list">
+                    <li>Progressive Web Apps (PWAs)</li>
+                    <li>Serverless Architecture</li>
+                    <li>Single Page Applications (SPAs)</li>
+                </ul>
+                <button class="card-button" onclick="toggleModal(3)">
+                    Read More...
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-1" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal(1)">
+                &times;
+            </span>
+            <h2 class="extra-heading">
+                DevOps Card
+            </h2>
+            <p class="extra-paragraph">
+                Detailed information about DevOps,
+                including tools, best practices,
+                and how it benefits the software
+                development lifecycle...
+            </p>
+        </div>
+    </div>
+
+    <div id="modal-2" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal(2)">
+                &times;
+            </span>
+            <h2 class="extra-heading">
+                Full Stack Developer Roadmap
+            </h2>
+            <p class="extra-paragraph">
+                In-depth guide and resources for becoming
+                a proficient full stack developer, covering
+                both front-end and back-end technologies...
+            </p>
+        </div>
+    </div>
+
+    <div id="modal-3" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal(3)">
+                &times;
+            </span>
+            <h2 class="extra-heading">
+                Web Development Trends
+            </h2>
+            <p class="extra-paragraph">
+                Latest trends in web development,
+                such as advancements in Progressive
+                Web Apps (PWAs), serverless
+                architecture, and more...
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

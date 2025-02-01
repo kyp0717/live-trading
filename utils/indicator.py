@@ -27,6 +27,7 @@ class TrendType(Enum):
 
 @dataclass
 class Trend():
+    description: str = field(default=None)
     symbol: str = field(default=None)
     trendtype: TrendType = field(default=None)
     indicator: IndType = field(default=None)
@@ -36,12 +37,12 @@ class Trend():
 
     def __repr__(self):
         return f" ----------- {self.symbol} Trend --------  \n" \
-               f"  trend type  = {self.trendtype.name!r}\n" \
-               f"  indicator   = {self.indicator.name!r}\n" \
-               f"  direction   = {self.direction.name!r}\n" \
-               f"  price       = {self.price}\n" \
-               f"  change      = {self.change},\n" \
-               f"  -----------------------------------------"
+               f"  trend type  = {self.trendtype.name!r}    \n" \
+               f"  indicator   = {self.indicator.name!r}    \n" \
+               f"  direction   = {self.direction.name!r}    \n" \
+               f"  price       = {self.price:.2f}\n" \
+               f"  change      = {self.change:.4f},\n" \
+               f"  -----------------------------------------  "
 
 
 class Trend2(TypedDict):
