@@ -10,13 +10,11 @@ OUTPUT_FILE_NAME = 'test_output.html'
 class HtmlGenerator(object):
     def __init__(self, template_name):
         self.template_name = template_name
-        self.env = Environment(loader=FileSystemLoader('live_templates'))
+        self.env = Environment(loader=FileSystemLoader('./live/templates'))
 
     def _build_path(self, suffix):
         # Build the full file path based on our current directory
-        current_directory = os.getcwd() 
-        # d = current_directory + "/live"
-        # print(d)
+        current_directory = os.getcwd() + "/live"
         return os.path.join(current_directory, suffix)
 
     def generate(self):
