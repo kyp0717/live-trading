@@ -1,25 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" >
+
 <head>
     <meta charset="UTF-8">
     <title>{% block title %} {% endblock %} - FlaskApp</title>
-    <link rel="stylesheet" href="style.css">
-    <style>
-    </style>
+    <!-- <link rel="stylesheet" href="styles.css"> -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"> -->
+
 </head>
+
 <body>
-    <nav>
+    <!-- <nav>
         <a href="#">FlaskApp</a>
         <a href="#">About</a>
-    </nav>
+    </nav> -->
     <hr>
-    <div class="content">
-        {% block content %} {% endblock %}
-        <div class="card">
-            <h4 class="heading">Market Status </h4>
-            <p class="description">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim vero quam consequuntur laboriosam corporis culpa.</p>
-            <button class="btn"></button>
+    <div class="ky-content">
+        <div class="ky-card-container">
+            {% block cards %} {% endblock %}
         </div>
     </div>
 </body>
+
 </html>
