@@ -40,12 +40,11 @@ class Market(IntEnum):
     Volatile = 4
     Unknown = 5
 
-
-
 class Benchmark():
     # defining var in init allow for custom variable in each instance
     # when defining var outside of init, the var will be the same in all instance
-    def __init__(self, symbol: str):
+    def __init__(self, symbol: str, live: bool):
+        self.live=live
         self.symbol=symbol
         self.ready=self.check_time()
         # self.ready=True
@@ -53,7 +52,7 @@ class Benchmark():
         self.ema_trend = None
         self.indicator = ind.Indicator(self.symbol)
         self.chart = ct.Chart(self.symbol, self.indicator.df)
-
+        self.test_date = self.derive_test_date()
 
     def check_time(self):
         today = datetime.now(pytz.timezone('US/Eastern')).date()

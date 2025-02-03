@@ -70,16 +70,11 @@ class Indicators:
     def __init__(self, symbol: str):
         self.symbol=symbol
         self.df: pd.DataFrame = self.get_data()
+        self.test_date = self.derive_test_date()
 
     def get_data(self):
-        return pd.DataFrame(bars.get_10bars(self.symbol, feed="iex"))
+        return pd.DataFrame(bars.get_bars_past(self.symbol, feed="iex"))
     
-
-    def test(self):
-        print(type(self.df))
-        print(self.df)
-
-
     def ema(self, period: int) -> Trend:
         self.df['ema5'] = ta.ema(self.df['c'], period=period)
         # Extract the time part
@@ -104,6 +99,5 @@ class Indicators:
         else:
             t.direction = Direction.UP
         print(t)
-
-        
+      
         return t

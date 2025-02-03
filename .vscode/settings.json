@@ -3,5 +3,23 @@
         "/home/kepl/miniconda3/envs/aiagent",
         "./indicators",
         "./utils"
-    ]
+    ],
+    "launch": {
+
+        "configurations": [
+            {
+                "name": "Flask Debug",
+                "type": "debugpy",
+                "request": "launch",
+                "module": "app",  // Replace "app" with your main Flask file
+                "env": {
+                    "FLASK_APP": "app.py",  // Set the Flask app module
+                    "FLASK_ENV": "development"
+                },
+                "console": "integratedTerminal"
+            }
+
+        ],
+        "compounds": []
+    }
 }
