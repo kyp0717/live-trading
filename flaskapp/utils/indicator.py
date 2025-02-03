@@ -63,17 +63,22 @@ class Trend2(TypedDict):
                f"  -------------------------------------"
 
 
+
 ## to avoid multiple copy of the dataframe 
 ## use generate multiple indicators using the same dataframe
 ## so this indicators class will host many indicators
 class Indicators:
-    def __init__(self, symbol: str):
+    def __init__(self, symbol: str, live: bool):
+        self.live = live
         self.symbol=symbol
         self.df: pd.DataFrame = self.get_data()
-        self.test_date = self.derive_test_date()
+        # self.test_date = bars.derive_date(bars.Timeframe.PAST)
 
     def get_data(self):
-        return pd.DataFrame(bars.get_bars_past(self.symbol, feed="iex"))
+        if self.live == False:
+            return pd.DataFrame(bars.get_bars_past(self.symbol, feed="iex"))
+        else: 
+            return pd.DataFrame(bars.get_bars_today(self.symbol, feed="iex"))
     
     def ema(self, period: int) -> Trend:
         self.df['ema5'] = ta.ema(self.df['c'], period=period)

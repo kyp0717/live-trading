@@ -1,3 +1,7 @@
+# caution: path[0] is reserved for script path (or '' in REPL)
+import sys
+sys.path.insert(1, '/home/kepl/work/live-trading/flaskapp/utils')
+
 import requests
 import os
 from dotenv import load_dotenv
@@ -14,9 +18,12 @@ from bokeh.io import output_notebook
 import pandas_ta as ta
 from dataclasses import dataclass, field
 from enum import IntEnum
-import paca_bars as bars
-import indicator as ind
-import chart as ct
+# from utils import paca_bars as bars
+# import paca_bars as bars
+from utils import indicator as ind
+# import .indicator as ind
+
+# import chart as ct
 
 # Load environment variables from .env file
 load_dotenv()
@@ -50,9 +57,9 @@ class Benchmark():
         # self.ready=True
         # stock_lst = self.get_stock_list()
         self.ema_trend = None
-        self.indicator = ind.Indicator(self.symbol)
-        self.chart = ct.Chart(self.symbol, self.indicator.df)
-        self.test_date = self.derive_test_date()
+        self.indicator = ind.Indicators(self.symbol, self.live)
+        # self.chart = ct.Chart(self.symbol, self.indicator.df)
+        # self.test_date = self.derive_test_date()
 
     def check_time(self):
         today = datetime.now(pytz.timezone('US/Eastern')).date()
@@ -68,10 +75,12 @@ class Benchmark():
         else: return True
 
     def run(self):
-        if self.ready == True:
-            self.indicator.ema(period=5)
-            self.chart.plot()
-            # self.indicator.test()
+        if self.live == False:
+            return self.indicator.ema(period=5)            
+        # if self.ready == True:
+        #     self.indicator.ema(period=5)
+        #     # self.chart.plot()
+        #     # self.indicator.test()
         else:
             print('not 9:40am --- more data is needed')
 

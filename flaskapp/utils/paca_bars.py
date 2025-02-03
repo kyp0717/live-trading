@@ -9,7 +9,7 @@ import pandas as pd
 import json
 import pytz
 from typing import List
-from enum import enum
+from enum import Enum
 
 # Load environment variables from .env file
 load_dotenv()
@@ -20,20 +20,28 @@ headers = {
     "APCA-API-SECRET-KEY": os.getenv("APCA_API_SECRET_KEY")
 }
 
-class Timeframe(enum):
+class Timeframe(Enum):
     TODAY = 1
     PAST = 2
 
 def derive_date(dt: Timeframe ):
-    est = pytz.timezone('US/Eastern')
+    # est = pytz.timezone('US/Eastern')
     # fmt = '%Y-%m-%d %H:%M:%S %Z%z'
-    if dt == Timeframe.Today:
+    if dt == Timeframe.TODAY:
         # Get current time in UTC
         utc_dt = datetime.now(timezone.utc)
     else:
+        # Create a naive datetime object
+        naive_dt = datetime(2025, 1, 15, 9, 40)
+
+        # Localize the naive datetime object to the 'America/New_York' timezone
+        est_dt = pytz.timezone('America/New_York').localize(naive_dt)
+
+        # Convert the localized datetime object to UTC
+        utc_dt = est_dt.astimezone(pytz.utc)
         ## date -- year, month, day, hour, minute, timezone
-        est_dt = datetime(2025, 1, 15, 9, 40, est)
-        utc_dt = est_dt.astimezone(timezone.utc)
+        # est_dt = datetime(2025, 1, 15, 9, 40, pytz.timezone('US/Eastern'))
+        # utc_dt = est_dt.astimezone(timezone.utc)
 
     # print(f'current time - {now_utc.astimezone(est).strftime(fmt)}')
     # Calculate time 15 minutes ago
@@ -69,7 +77,7 @@ def get_bars_today(symbol: str, feed: str) -> List:
         # return data
 
 
-def get_bars_past(feed: str, symbol: str):
+def get_bars_past(symbol: str, feed: str):
     (start_dt_utc, end_dt_utc) = derive_date(Timeframe.PAST)
     urlsymbol = f"?symbols={symbol}"
     timeframe = "&timeframe=1Min"
@@ -94,18 +102,18 @@ def get_bars_past(feed: str, symbol: str):
         # return data
 
 
-def get_bar(self):
-    url = f'https://data.alpaca.markets/v2/stocks/bars/latest?symbols={self.symbol}'
+def get_bar():
+    url = f'https://data.alpaca.markets/v2/stocks/bars/latest?symbols={symbol}'
     response = requests.get(url, headers=headers)
 
     data = response.json()
     if not data:
-        logging.error(f"PACA: unable to get latest bar for {self.symbol}")
+        logging.error(f"PACA: unable to get latest bar for {symbol}")
         return None
     else:
         return data    
     
-def get_quote(self,symbol: str) -> List:
+def get_quote(symbol: str) -> List:
     url = f'https://data.alpaca.markets/v2/stocks/{symbol}/quotes/latest'
     
     response = requests.get(url, headers=headers)
