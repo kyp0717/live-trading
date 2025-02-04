@@ -14,17 +14,17 @@ sys.path.insert(1, '/home/kepl/work/live-trading/flaskapp/utils')
 load_dotenv()
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
+# app.template_folder('public')
 
 @app.route("/")
 def home():
-    return render_template("home.html")
-
-
+    spybm = bm.Benchmark('SPY', live=False)
+    s = spybm.run().__dict__
+    print(s)
+    return render_template("home.html", spy=s)
 
 if __name__ == "__main__":
-    
-    spybm = bm.Benchmark('SPY', live=False)
-    d = spybm.run()
-    spy_html = gen.HtmlGenerator("./templates/cards/spy_tmpl.html", d.__dict__ , "spy_out.html")
-    spy_html.generate()
-    # app.run(debug=True)
+
+    # spy_html = gen.HtmlGenerator("spy_tmpl.html", d.__dict__ , "spy_out.html")
+    # spy_html.generate()
+    app.run(debug=True)

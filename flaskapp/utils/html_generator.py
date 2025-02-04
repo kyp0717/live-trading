@@ -18,18 +18,13 @@ class HtmlGenerator(object):
         return os.path.join(current_directory, suffix)
 
     def generate(self):
-        public_folder_path = self._build_path('public')
-        # If the public folder exists, then throw it away so we can regenerate it
-        if os.path.isdir(public_folder_path):
-            shutil.rmtree(public_folder_path)
-        os.mkdir(public_folder_path)
 
         # Get Jinja template
         # Print the search path
         print(f'search: {self.env.loader.searchpath}')
         print(self.data)
         template = self.env.get_template(self.template_name)
-        with open(self._build_path('public/%s' % self.template_output), 'w') as html_file:
+        with open(f'./flaskapp/templates/{self.template_output}', 'w') as html_file:
             html = template.render(self.data)
             # Write the rendered template to the html file
             html_file.write(html)
