@@ -25,9 +25,17 @@ class IndType(Enum):
 class TrendType(Enum):
     PCT_CHANGE =1
 
+## this is dictionary
+class TrendDict(TypedDict):
+    symbol: str 
+    trendtype: TrendType
+    indicator: IndType
+    direction: Direction
+    price: float
+    change: float 
+
 @dataclass
 class Trend():
-    description: str = field(default=None)
     symbol: str = field(default=None)
     trendtype: TrendType = field(default=None)
     indicator: IndType = field(default=None)
@@ -44,24 +52,16 @@ class Trend():
                f"  change      = {self.change:.4f},\n" \
                f"  -----------------------------------------  "
 
-
-class Trend2(TypedDict):
-    symbol: str = field(default=None)
-    trendtype: TrendType = field(default=None)
-    indicator: IndType = field(default=None)
-    direction: Direction = field(default=None)
-    price: list[float] = field(default=None)
-    change: float = field(default=None)
-
-    def __repr__(self):
-        return f" ----------- {self.symbol} Trend --------  \n" \
-               f"  trend type  = {self.trendtype.name!r}\n" \
-               f"  indicator   = {self.indicator.name!r}\n" \
-               f"  direction   = {self.direction.name!r}\n" \
-               f"  price       = {self.price.name!r}\n" \
-               f"  chane       = {self.change.name!r}\n" \
-               f"  -------------------------------------"
-
+    def to_dict(self):
+        dd: TrendDict = {
+           "symbol": self.symbol,
+           "trendtype": self.trendtype.name, 
+           "indicator": self.indicator.name ,
+           "direction": self.direction.name,
+           "price": self.price,
+           "change": self.change
+        }
+        return dd
 
 
 ## to avoid multiple copy of the dataframe 

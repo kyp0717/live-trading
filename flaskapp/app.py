@@ -19,7 +19,7 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 @app.route("/")
 def home():
     spybm = bm.Benchmark('SPY', live=False)
-    s = spybm.run().__dict__
+    s = spybm.run().to_dict()
     print(s)
     return render_template("home.html", spy=s)
 
