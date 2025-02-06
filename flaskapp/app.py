@@ -23,8 +23,19 @@ def home():
     print(s)
     return render_template("home.html", spy=s)
 
-if __name__ == "__main__":
+# @app.route("/market")
+# def market():
+#     return render_template("market.html", spy=s)
 
-    # spy_html = gen.HtmlGenerator("spy_tmpl.html", d.__dict__ , "spy_out.html")
-    # spy_html.generate()
+@app.route("/sector")
+def sector():
+    return render_template("sector.html")
+
+# @app.route("/assets")
+# def assets():
+#     return render_template("assets.html")
+
+
+
+if __name__ == "__main__":
     app.run(debug=True)
