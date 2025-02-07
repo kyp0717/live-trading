@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-6 d-flex flex-column 
+        justify-content-start">
+        <h2 class="text-center mb-3">
+            Hello
+        </h2>
+        <div class="card border-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title text-primary">
+                    SPY Trend
+                </h5>
+
+            </div>
+        </div>
+        <div class="card border-danger mb-3">
+            <div class="card-body">
+                <h5 class="card-title text-danger">
+                    Sector Trend
+                </h5>
+                <!-- {% include "testtable.html" %} -->
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 d-flex flex-column 
+        justify-content-start">
+        <h2 class="text-center mb-3">
+            Assets
+        </h2>
+        <div class="card border-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title text-success">
+                    PNL
+                </h5>
+                <p class="card-text">
+                    Ruby is a dynamic, reflective, object-oriented, 
+                    and general-purpose scripting language.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

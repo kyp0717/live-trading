@@ -18,22 +18,23 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 
 @app.route("/")
 def home():
+    return render_template("principal.html")
+    # return render_template("principal.html")
+
+@app.route("/market")
+def market():
     spybm = bm.Benchmark('SPY', live=False)
     s = spybm.run().to_dict()
-    print(s)
-    return render_template("home.html", spy=s)
-
-# @app.route("/market")
-# def market():
-#     return render_template("market.html", spy=s)
+    # print(s)
+    return render_template("market.html",spy=s)
 
 @app.route("/sector")
 def sector():
     return render_template("sector.html")
 
-# @app.route("/assets")
-# def assets():
-#     return render_template("assets.html")
+@app.route("/assets")
+def assets():
+    return render_template("assets.html")
 
 
 
