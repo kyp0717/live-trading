@@ -4,15 +4,13 @@ import sys
 
 # import benchmark as bm
 from utils import benchmark as bm
-from utils import html_generator as gen
-
 
 # caution: path[0] is reserved for script path (or '' in REPL)
 sys.path.insert(1, '/home/kepl/work/live-trading/flaskapp/utils')
 
 # Load environment variables from .env file
 load_dotenv()
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 # app.template_folder('public')
 
@@ -35,8 +33,6 @@ def sector():
 @app.route("/assets")
 def assets():
     return render_template("assets.html")
-
-
 
 if __name__ == "__main__":
     app.run(debug=True)
